@@ -6,6 +6,10 @@
 
 package sort2
 
+import (
+	"constraints"
+)
+
 // Search uses binary search to find and return the smallest index i
 // in [0, n) at which f(i) is true, assuming that on the range [0, n),
 // f(i) == true implies f(i+1) == true. That is, Search requires that
@@ -111,13 +115,6 @@ func (p Float64Slice) Search(x float64) int { return SearchFloat64s(p, x) }
 // Search returns the result of applying SearchStrings to the receiver and x.
 func (p StringSlice) Search(x string) int { return SearchStrings(p, x) }
 
-type Ordered interface {
-	~int | ~int8 | ~int16 | ~int32 | ~int64 |
-		~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr |
-		~float32 | ~float64 |
-		~string
-}
-
 type Guesser interface {
 	Guess(int) bool
 }
@@ -139,7 +136,7 @@ func SearchGuesser[G Guesser](n int, guesser G) int {
 	return i
 }
 
-type orderedSliceGuesser[T Ordered] struct {
+type orderedSliceGuesser[T constraints.Ordered] struct {
 	slice []T
 	value T
 }
@@ -148,6 +145,6 @@ func (S orderedSliceGuesser[T]) Guess(i int) bool {
 	return S.slice[i] >= S.value
 }
 
-func SearchOrdereds[T Ordered](a []T, x T) int {
+func SearchOrdereds[T constraints.Ordered](a []T, x T) int {
 	return SearchGuesser(len(a), orderedSliceGuesser[T]{a, x})
 }

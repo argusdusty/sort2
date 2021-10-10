@@ -4,6 +4,10 @@
 
 package sort2
 
+import (
+	"constraints"
+)
+
 type genericSlice[T any] struct {
     slice []T
     less func(i, j int) bool
@@ -38,7 +42,7 @@ func SliceIsSorted[T any](slice []T, less func(i, j int) bool) bool {
 	return true
 }
 
-type orderedSlice[T Ordered] []T
+type orderedSlice[T constraints.Ordered] []T
 
 func (s orderedSlice[T]) Less(i, j int) bool { return s[i] < s[j] }
 func (s orderedSlice[T]) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
@@ -48,7 +52,7 @@ func (s orderedSlice[T]) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 //
 // The sort is not guaranteed to be stable. For a stable sort, use
 // SliceStableSortable.
-func SliceOrdered[T Ordered](slice []T) {
+func SliceOrdered[T constraints.Ordered](slice []T) {
 	length := len(slice)
 	quickSort(orderedSlice[T](slice), 0, length, maxDepth(length))
 }
@@ -56,13 +60,13 @@ func SliceOrdered[T Ordered](slice []T) {
 // SliceStableSortable sorts the provided slice with Sortable elements
 // given the provided less function while keeping the original order of
 // equal elements.
-func SliceStableOrdered[T Ordered](slice []T) {
+func SliceStableOrdered[T constraints.Ordered](slice []T) {
 	stable(orderedSlice[T](slice), len(slice))
 }
 
 // SliceIsSortedSortable tests whether a slice with Sortable elements is
 // sorted.
-func SliceIsSortedOrdered[T Ordered](slice []T) bool {
+func SliceIsSortedOrdered[T constraints.Ordered](slice []T) bool {
 	n := len(slice)
 	for i := n - 1; i > 0; i-- {
 		if slice[i] < slice[i-1] {

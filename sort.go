@@ -6,12 +6,7 @@
 // collections.
 package sort2
 
-// A type, typically a collection, that satisfies sort.Interface can be
-// sorted by the routines in this package. The methods require that the
-// elements of the collection be enumerated by an integer index.
-type Interface interface {
-	// Len is the number of elements in the collection.
-	Len() int
+type lessSwap interface {
 	// Less reports whether the element with
 	// index i should sort before the element with index j.
 	Less(i, j int) bool
@@ -19,9 +14,13 @@ type Interface interface {
 	Swap(i, j int)
 }
 
-type lessSwap interface {
-	Less(i, j int) bool
-	Swap(i, j int)
+// A type, typically a collection, that satisfies sort.Interface can be
+// sorted by the routines in this package. The methods require that the
+// elements of the collection be enumerated by an integer index.
+type Interface interface {
+	// Len is the number of elements in the collection.
+	Len() int
+	lessSwap
 }
 
 // Insertion sort
